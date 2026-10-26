@@ -19,17 +19,21 @@ npm install
 npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) on the host computer. To play on phones connected to the same Wi-Fi, open the host computer's local network address (for example, `http://192.168.1.20:3000`) on each phone. The host and phones must be able to reach one another on the network.
+Open [http://localhost:3000](http://localhost:3000) on the host computer for local development. For local multiplayer, have every device—including the host—open the host computer's local network address (for example, `http://192.168.1.20:3000`) while connected to the same Wi-Fi. Join by entering the room code; the QR and copied invite link point to the public game site, not your local server.
 
-### Start a game
+## How to play
 
 1. Choose **Create room** on the first device.
-2. Share the four-letter room code or invite link with the group.
-3. Everyone opens the link or enters the code and joins from their own device.
-4. Once at least two players are present, the host starts the game.
-5. Arrange the phones in a row. Match the line stubs at the edges, then swipe left-to-right across every tile.
+2. For the deployed game, share the four-letter code, copied invite link, or QR code. Everyone should use the same public game address: [lineup-phone-puzzle.vercel.app](https://lineup-phone-puzzle.vercel.app/). For a local game, have everyone open the same local network address and enter the code.
+3. Each player joins on their own phone. Names default to **Player 1**, **Player 2**, and so on. The host starts once at least two players have joined.
+4. Put the phones side by side. Arrange them so the colored line patterns match at each edge, with the **START** phone first and the **FINISH** phone last. Any other phones go between them where their line ends match.
+5. Swipe across the phones in that order, like passing a relay:
+   - The **START** player begins the swipe and moves their finger horizontally from left to right, lifting near the right edge.
+   - Each next player starts as soon as the previous player lifts, then swipes left to right across their own screen. Middle phones start near the left edge and finish near the right edge.
+   - The **FINISH** player is last. The `←` means the swipe arrives from the phone on the left; the swipe on this phone still moves left to right.
+   - Do not all swipe at once. Start the next swipe within about one second of the previous player lifting. There is no required swipe speed; keep it smooth and mostly horizontal.
 
-Choose **Practice solo** to arrange a shuffled set of puzzle tiles with a mouse or touch screen.
+Choose **Practice solo** to arrange a shuffled set of puzzle tiles with a mouse or touch screen. Solo practice does not use the timed multiplayer swipe.
 
 ## What's implemented
 
