@@ -57,7 +57,7 @@ The server keeps room state in memory. Rooms disappear when the process restarts
 | `package.json` | Node package metadata and start command |
 | `Dockerfile` | Container build instructions |
 
-The room's **Show QR** button creates a scannable QR code for the full invite URL, including the current room code. Each click refreshes the QR from the address currently open, so links work on both the production domain and a deployment-specific Vercel URL.
+The room's **Show QR** button creates a scannable QR code for the full invite URL, including the current room code. Each click refreshes the QR using the public production domain, so invitees can open the room without signing in to Vercel. The copied invite link uses the same public address.
 
 ## Known gaps
 
