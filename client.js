@@ -120,7 +120,7 @@ function renderLobby(s) {
       view.className = 'qr-view';
       document.querySelector('.lobby .card').append(view);
     }
-    view.innerHTML = `<p class="hint">Scan to open this room:</p><a class="qr-link" href="${esc(inviteUrl)}">${esc(inviteUrl)}</a><div class="qr-image" role="img" aria-label="QR code for room ${esc(s.code)}">${qrCode.createSvgTag({ cellSize: 5, margin: 4, scalable: true })}</div>`;
+    view.innerHTML = `<div class="qr-heading"><span class="qr-symbol" aria-hidden="true">⌗</span><div><strong>Scan to join</strong><span>Open your camera and point it at the code.</span></div></div><div class="qr-image" role="img" aria-label="QR code for room ${esc(s.code)}">${qrCode.createSvgTag({ cellSize: 5, margin: 4, scalable: true })}</div><div class="qr-link-card"><span class="qr-link-label">ROOM LINK</span><a class="qr-link" href="${esc(inviteUrl)}" title="${esc(inviteUrl)}">${esc(inviteUrl)}</a></div><p class="qr-footnote">Anyone with this link can join your room.</p>`;
     document.querySelector('#qr').textContent = 'Refresh QR';
   };
   document.querySelector('#start')?.addEventListener('click',()=>send({type:'start'}));
