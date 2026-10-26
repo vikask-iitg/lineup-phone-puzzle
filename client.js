@@ -20,6 +20,11 @@ function landing() {
 }
 function askName() { try { return localStorage.getItem('mosaic-name') || ''; } catch { return ''; } }
 function connect(payload) {
+  if (['localhost', '127.0.0.1'].includes(location.hostname) && ['create', 'join'].includes(payload.type)) {
+    const roomPath = payload.type === 'join' ? `/${encodeURIComponent(payload.code)}` : '/?createRoom=1';
+    location.replace(`${PUBLIC_GAME_ORIGIN}${roomPath}`);
+    return;
+  }
   if (socket) socket.close();
   const scheme = location.protocol === 'https:' ? 'wss:' : 'ws:';
   socket = new WebSocket(`${scheme}//${location.host}`); let samples = [], sent = 0;
@@ -133,4 +138,7 @@ function renderPractice(){
 }
 
 const directCode=location.pathname.slice(1).toUpperCase();
-if (/^[A-Z]{4}$/.test(directCode)) connect({type:'join',code:directCode,sessionId,name:askName()}); else landing();
+if (new URLSearchParams(location.search).has('createRoom')) {
+  history.replaceState(null, '', '/');
+  connect({type:'create',sessionId,name:askName()});
+} else if (/^[A-Z]{4}$/.test(directCode)) connect({type:'join',code:directCode,sessionId,name:askName()}); else landing();

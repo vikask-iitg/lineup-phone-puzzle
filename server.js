@@ -112,7 +112,7 @@ function join(ws, room, msg) {
   const sessionId = String(msg.sessionId || Math.random().toString(36).slice(2));
   const prior = room.players.get(sessionId);
   if (prior?.ws && prior.ws !== ws) { send(prior.ws, 'elsewhere'); prior.ws.close(); }
-  const name = String(msg.name || prior?.name || `Pal ${room.players.size + 1}`).trim().slice(0, 16) || 'Pal';
+  const name = String(msg.name || prior?.name || `Player ${room.players.size + 1}`).trim().slice(0, 16) || 'Player';
   const same = [...room.players.values()].filter(p => p.id !== sessionId && p.name.toLowerCase().startsWith(name.toLowerCase()));
   const uniqueName = same.some(p => p.name.toLowerCase() === name.toLowerCase()) ? `${name} ${same.length + 1}` : name;
   const player = { id: sessionId, name: uniqueName, color: prior?.color || palettes[room.players.size % palettes.length], ws, joinedAt: prior?.joinedAt || Date.now(), connected: true };
