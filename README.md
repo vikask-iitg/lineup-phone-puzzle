@@ -40,17 +40,18 @@ Choose **Practice solo** to arrange a shuffled set of puzzle tiles with a mouse 
 
 ## Deploying
 
-The app uses one Node.js process for both its static web files and WebSocket server. Deploy this directory to a Node.js or container host that supports WebSockets, set `PORT` if the host requires it, and enable secure WebSockets (`wss://`) through the host's HTTPS endpoint. Share the resulting HTTPS URL with players.
+The app uses one Node.js process for both its static web files and WebSocket server. The root `server.ts` entry point lets Vercel detect and run the existing Node.js server. Vercel supports WebSocket connections; deploy the repository as a Node.js project and share the resulting HTTPS URL with players. Other Node.js or container hosts that support WebSockets can also run it. Set `PORT` if the host requires it, and enable secure WebSockets (`wss://`) through the host's HTTPS endpoint.
 
-The server keeps room state in memory. Rooms disappear when the process restarts, and a multi-instance deployment needs shared storage and routing before players in one room can reliably land on the same server. The included [Dockerfile](Dockerfile) is a starting point for container hosts.
+The server keeps room state in memory. Rooms disappear when the process restarts, and players in one room must reach the same server instance. For a scaled Vercel deployment, shared storage and cross-instance messaging are needed before rooms can reliably span multiple server instances. The included [Dockerfile](Dockerfile) is a starting point for container hosts.
 
 ## Project files
 
 | File | Purpose |
 | --- | --- |
 | `server.js` | Static HTTP server, WebSocket rooms, game state, timers, and swipe evaluation |
+| `server.ts` | Vercel Node.js server entry point |
 | `index.html` | App shell and mobile viewport settings |
-| `app.js` | Landing, lobby, play screens, room connection, and solo practice |
+| `client.js` | Landing, lobby, play screens, room connection, and solo practice |
 | `style.css` | Responsive visual design and touch-friendly layout |
 | `package.json` | Node package metadata and start command |
 | `Dockerfile` | Container build instructions |

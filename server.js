@@ -3,8 +3,13 @@ const fs = require('node:fs');
 const path = require('node:path');
 const { WebSocketServer, WebSocket } = require('ws');
 
-const ROOT = __dirname;
+const ROOT = process.cwd();
 const PORT = process.env.PORT || 3000;
+const staticFiles = new Map([
+  ['/index.html', fs.readFileSync(path.join(ROOT, 'index.html'))],
+  ['/style.css', fs.readFileSync(path.join(ROOT, 'style.css'))],
+  ['/client.js', fs.readFileSync(path.join(ROOT, 'client.js'))],
+]);
 const rooms = new Map();
 const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
 const palettes = ['#ff5d73', '#39d5c5', '#ffc857', '#8c7bff', '#55a7ff', '#ff914d', '#d66bdb', '#a3d977'];
@@ -13,14 +18,11 @@ const levels = [{ lines: 1, seconds: 60 }, { lines: 2, seconds: 50 }, { lines: 3
 const server = http.createServer((req, res) => {
   const requested = new URL(req.url, `http://${req.headers.host}`).pathname;
   const pathname = requested === '/' || /^[A-Z]{4}$/.test(requested.slice(1)) ? '/index.html' : requested;
-  const file = path.join(ROOT, pathname.replace(/^\//, ''));
-  if (!file.startsWith(ROOT)) { res.writeHead(403).end(); return; }
-  fs.readFile(file, (err, data) => {
-    if (err) { res.writeHead(404).end('Not found'); return; }
-    const ext = path.extname(file);
-    res.writeHead(200, { 'Content-Type': ({ '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript' })[ext] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
-    res.end(data);
-  });
+  const data = staticFiles.get(pathname);
+  if (!data) { res.writeHead(404).end('Not found'); return; }
+  const ext = path.extname(pathname);
+  res.writeHead(200, { 'Content-Type': ({ '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript' })[ext] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
+  res.end(data);
 });
 const wss = new WebSocketServer({ server });
 
@@ -125,6 +127,6 @@ setInterval(() => {
     if (![...room.players.values()].some(p => p.connected) && now - room.lastActive > 600000) rooms.delete(room.code);
   }
 }, 250);
-server.listen(PORT, () => console.log(`Lines in Sync listening on ${PORT}`));
-
+// Vercel owns the listener in production; keep a local listener for development.
+if (!process.env.VERCEL) server.listen(PORT, () => console.log(`Lines in Sync listening on ${PORT}`));
 module.exports = server;

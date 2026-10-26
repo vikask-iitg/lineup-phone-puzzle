@@ -1,4 +1,5 @@
-// Vercel's Node.js server entry point. Importing the existing CommonJS server starts its HTTP/WebSocket listener and exports it.
+// Vercel detects this root entry point as the Node.js server. The HTTP server
+// is exported for Vercel to manage; local runs start their own listener.
 import server from './server.js';
 
 export default server;
