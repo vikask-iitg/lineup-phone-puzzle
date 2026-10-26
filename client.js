@@ -69,9 +69,25 @@ function renderRoom() {
 }
 function renderLobby(s) {
   const host = s.hostId === myId;
-  app.innerHTML = `<div class="shell">${logo()}<div class="lobby"><section class="card"><div class="eyebrow">Your room</div><div class="room-code">${esc(s.code)}</div><div class="actions"><button class="btn" id="copy">Copy invite link</button><button class="btn" id="qr">Show QR</button></div><p class="hint">Share this code. Friends can join from any phone or laptop.</p>${document.querySelector('#qr-view')?.outerHTML || ''}</section><section class="card"><div class="eyebrow">Players · ${s.players.length}/8</div><div>${s.players.map(p=>`<div class="player"><span class="dot" style="background:${p.color}"></span><strong>${esc(p.name)}</strong>${p.id===s.hostId?'<small>HOST</small>':''}<small>${p.connected?'●':'○'}</small></div>`).join('')}</div><p class="instruction">Put your phones side by side.<br>Match the lines. Swipe together.</p>${host?`<button class="btn primary" id="start" ${s.players.length<2?'disabled':''}>Start game &nbsp; →</button>`:'<p class="hint">Waiting for host…</p>'}</section></div></div>`;
+  const qrMarkup = document.querySelector('#qr-view')?.outerHTML || '';
+  const qrLabel = qrMarkup ? 'Refresh QR' : 'Show QR';
+  app.innerHTML = `<div class="shell">${logo()}<div class="lobby"><section class="card"><div class="eyebrow">Your room</div><div class="room-code">${esc(s.code)}</div><div class="actions"><button class="btn" id="copy">Copy invite link</button><button class="btn" id="qr">${qrLabel}</button></div><p class="hint">Share this code. Friends can join from any phone or laptop.</p>${qrMarkup}</section><section class="card"><div class="eyebrow">Players · ${s.players.length}/8</div><div>${s.players.map(p=>`<div class="player"><span class="dot" style="background:${p.color}"></span><strong>${esc(p.name)}</strong>${p.id===s.hostId?'<small>HOST</small>':''}<small>${p.connected?'●':'○'}</small></div>`).join('')}</div><p class="instruction">Put your phones side by side.<br>Match the lines. Swipe together.</p>${host?`<button class="btn primary" id="start" ${s.players.length<2?'disabled':''}>Start game &nbsp; →</button>`:'<p class="hint">Waiting for host…</p>'}</section></div></div>`;
   document.querySelector('#copy').onclick = async () => { const url = `${location.origin}/${s.code}`; try { await navigator.clipboard.writeText(url); toast('Invite link copied!'); } catch { toast(url); } };
-  document.querySelector('#qr').onclick = () => { const old = document.querySelector('#qr-view'); if (old) old.remove(); else { const div=document.createElement('div');div.id='qr-view';div.innerHTML=`<p class="hint">Scan to join: ${location.origin}/${s.code}</p><div style="background:#fff;color:#111;padding:12px;border-radius:10px;display:inline-block;font:700 10px monospace">QR CODE<br>${s.code}</div>`; document.querySelector('.lobby .card').append(div); } };
+  document.querySelector('#qr').onclick = () => {
+    const inviteUrl = new URL(`/${encodeURIComponent(s.code)}`, location.origin).href;
+    const qrCode = qrcode(0, 'M');
+    qrCode.addData(inviteUrl, 'Byte');
+    qrCode.make();
+    let view = document.querySelector('#qr-view');
+    if (!view) {
+      view = document.createElement('div');
+      view.id = 'qr-view';
+      view.className = 'qr-view';
+      document.querySelector('.lobby .card').append(view);
+    }
+    view.innerHTML = `<p class="hint">Scan to open this room:</p><a class="qr-link" href="${esc(inviteUrl)}">${esc(inviteUrl)}</a><div class="qr-image" role="img" aria-label="QR code for room ${esc(s.code)}">${qrCode.createSvgTag({ cellSize: 5, margin: 4, scalable: true })}</div>`;
+    document.querySelector('#qr').textContent = 'Refresh QR';
+  };
   document.querySelector('#start')?.addEventListener('click',()=>send({type:'start'}));
 }
 function renderReady(s) {

@@ -3,6 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "description": "A cooperative phone puzzle about lining up matching paths",
-  "scripts": { "start": "node server.js" },
-  "dependencies": { "ws": "^8.18.0" }
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "qrcode-generator": "^2.0.4"
+  }
 }

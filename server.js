@@ -9,6 +9,7 @@ const staticFiles = new Map([
   ['/index.html', fs.readFileSync(path.join(ROOT, 'index.html'))],
   ['/style.css', fs.readFileSync(path.join(ROOT, 'style.css'))],
   ['/client.js', fs.readFileSync(path.join(ROOT, 'client.js'))],
+  ['/qrcode-generator.js', fs.readFileSync(path.join(ROOT, 'qrcode-generator.js'))],
 ]);
 const rooms = new Map();
 const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ';

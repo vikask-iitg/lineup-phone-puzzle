@@ -52,10 +52,13 @@ The server keeps room state in memory. Rooms disappear when the process restarts
 | `server.ts` | Vercel Node.js server entry point |
 | `index.html` | App shell and mobile viewport settings |
 | `client.js` | Landing, lobby, play screens, room connection, and solo practice |
+| `qrcode-generator.js` | Local QR encoder for shareable room links |
 | `style.css` | Responsive visual design and touch-friendly layout |
 | `package.json` | Node package metadata and start command |
 | `Dockerfile` | Container build instructions |
 
+The room's **Show QR** button creates a scannable QR code for the full invite URL, including the current room code. Each click refreshes the QR from the address currently open, so links work on both the production domain and a deployment-specific Vercel URL.
+
 ## Known gaps
 
-This is an early prototype, not yet a complete implementation of the original build spec. It has not been validated with a real group of phones or deployed to a public URL. The tap fallback, generated QR codes, full disconnect pause-and-rebuild flow, decoy level, persistent/shared room storage, and several accessibility and onboarding details still need work. See the original build brief for the complete target behavior.
+This is an early prototype, not yet a complete implementation of the original build spec. The tap fallback, full disconnect pause-and-rebuild flow, decoy level, persistent/shared room storage, and several accessibility and onboarding details still need work. See the original build brief for the complete target behavior.
