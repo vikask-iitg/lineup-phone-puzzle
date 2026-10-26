@@ -106,17 +106,19 @@ function renderReady(s) {
 function renderPlay(s) {
   const tile = s.tiles.find(t=>t.playerId===myId);
   if (!tile) { app.innerHTML=`<div class="stage"><div class="center"><h2>Next level starts soon — you'll be in it.</h2></div></div>`; return; }
-  const remain = Math.max(0, (s.endsAt - (Date.now()+clockOffset))/1000); const width = Math.max(0,remain/(s.level===1?60:s.level===2?50:45)*100);
+  const totalSeconds = [60, 50, 45, 45, 40][s.level - 1] || 40;
+  const remain = Math.max(0, (s.endsAt - (Date.now()+clockOffset))/1000); const width = Math.max(0,remain/totalSeconds*100);
   const hint = tile.start ? 'Swipe from here →' : tile.end ? '← Finish here' : 'Continue the swipe →';
   app.innerHTML = `<div class="stage"><div class="stagehead"><span>LEVEL ${s.level} · ${esc(tile.start?'START':tile.end?'FINISH':'TILE')}</span><span id="time">${Math.ceil(remain)}s</span></div><div class="timer"><i style="width:${width}%"></i></div><div class="tile" id="tile">${svgTile(tile)}<svg class="swipe-overlay" viewBox="0 0 300 500" preserveAspectRatio="none" aria-hidden="true"><path id="swipe-trail" d=""/></svg><div class="edgebadge">${tile.start?'● START':tile.end?'⚑ FINISH':'MATCH BOTH EDGES'}</div><div class="tilehint">${hint}</div>${s.level===4?'<button class="rotate" id="rotate" aria-label="Rotate tile">↻</button>':''}</div><div class="stagefoot">Swipe from the left edge to the right edge.<br><span class="hint">Keep all phones in the row.</span></div></div>`;
   const el=document.querySelector('#tile'), trail=document.querySelector('#swipe-trail'); let start, points=[];
+  const timeEl=document.querySelector('#time'), timerFill=document.querySelector('.timer > i');
+  const timerInterval=setInterval(()=>{if(!timeEl.isConnected||roomState?.phase!=='play'){clearInterval(timerInterval);return;}const seconds=Math.max(0,(s.endsAt-(Date.now()+clockOffset))/1000);timeEl.textContent=`${Math.ceil(seconds)}s`;timerFill.style.width=`${Math.max(0,seconds/totalSeconds*100)}%`;},100);
   const draw=e=>{const r=el.getBoundingClientRect(), point={x:Math.max(0,Math.min(300,(e.clientX-r.left)/r.width*300)),y:Math.max(0,Math.min(500,(e.clientY-r.top)/r.height*500))};if(!points.length||Math.hypot(point.x-points.at(-1).x,point.y-points.at(-1).y)>2)points.push(point);trail.setAttribute('d',points.map((p,i)=>`${i?'L':'M'} ${p.x.toFixed(1)} ${p.y.toFixed(1)}`).join(' '));};
   const begin=e=>{if(e.target.closest('#rotate'))return;e.preventDefault();const r=el.getBoundingClientRect();start={x:e.clientX,y:e.clientY,t:Date.now()+clockOffset,left:e.clientX-r.left,pointerId:e.pointerId};points=[];draw(e);el.setPointerCapture(e.pointerId);};
   const move=e=>{if(start?.pointerId===e.pointerId){e.preventDefault();draw(e);}};
   const end=e=>{if(!start||start.pointerId!==e.pointerId)return;e.preventDefault();draw(e);const dx=e.clientX-start.x,dy=Math.abs(e.clientY-start.y),r=el.getBoundingClientRect();const valid=dx>0&&dx>=dy*2&&(tile.start||start.left<=40)&&(tile.end||r.right-e.clientX<=40);if(valid)send({type:'segment',startTime:start.t,endTime:Date.now()+clockOffset});start=null;setTimeout(()=>{if(!start)trail.setAttribute('d','');},450);};
   el.addEventListener('pointerdown',begin);el.addEventListener('pointermove',move);el.addEventListener('pointerup',end);el.addEventListener('pointercancel',()=>{start=null;trail.setAttribute('d','');});
   document.querySelector('#rotate')?.addEventListener('click',()=>{el.style.transform=el.style.transform?'':'rotate(180deg)';});
-  setTimeout(()=>{if(roomState?.phase==='play')renderPlay(roomState)},500);
 }
 function renderResult(s,title,sub,advance) {
   app.innerHTML=`<div class="stage"><div class="center"><div class="eyebrow">${advance?'LEVEL COMPLETE':'GAME OVER'}</div><h1 class="result">${title}</h1><p>${sub}</p><div class="diagram">${s.players.map((_,i)=>`<div class="mini ${advance?'active':''}" style="animation-delay:${i*.18}s"></div>`).join('')}</div>${advance?'<div class="hint">Next level in a moment…</div>':s.hostId===myId?'<div class="actions" style="justify-content:center"><button class="btn primary" id="again">Play again</button><button class="btn" id="lobby">Back to lobby</button></div>':''}</div></div>`;
