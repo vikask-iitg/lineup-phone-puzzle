@@ -1,5 +1,8 @@
 const app = document.querySelector('#app');
 const PUBLIC_GAME_ORIGIN = 'https://lineup-phone-puzzle.vercel.app';
+if (location.hostname.endsWith('.vercel.app') && location.origin !== PUBLIC_GAME_ORIGIN) {
+  location.replace(`${PUBLIC_GAME_ORIGIN}${location.pathname}${location.search}${location.hash}`);
+}
 const palette = ['#ff5d73','#39d5c5','#ffc857','#8c7bff','#55a7ff','#ff914d','#d66bdb','#a3d977'];
 const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
 let socket, roomState, sessionId, myId, clockOffset = 0, reconnectCode = '', soloTiles = [], pointer = null, incompleteCount = 0;
