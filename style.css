@@ -4,3 +4,4 @@
 .qr-view{margin-top:18px}.qr-link{display:block;max-width:100%;margin:8px 0 12px;color:var(--muted);font:12px 'DM Mono',monospace;overflow-wrap:anywhere}.qr-image{width:min(260px,100%);padding:10px;background:#fff;border-radius:12px}.qr-image svg{display:block;width:100%;height:auto}
 .tile .swipe-overlay{z-index:1;pointer-events:none}.swipe-overlay path{fill:none;stroke:var(--lime);stroke-width:15;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 8px #c6f36b99);opacity:.96}
 .code{font-size:clamp(22px,6vw,27px);letter-spacing:.16em}
+.home-btn{border:1px solid #3c4152;background:#10131d;color:var(--paper);border-radius:10px;padding:7px 10px;font-size:12px;font-weight:700;white-space:nowrap;touch-action:manipulation}.home-btn:hover{border-color:var(--lime)}.stage{position:relative}.stage>.home-btn{position:absolute;top:calc(env(safe-area-inset-top) + 12px);left:15px;z-index:20}.stagehead>.home-btn{flex:0 0 auto;padding:6px 8px}
