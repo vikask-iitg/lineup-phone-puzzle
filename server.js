@@ -126,3 +126,5 @@ setInterval(() => {
   }
 }, 250);
 server.listen(PORT, () => console.log(`Lines in Sync listening on ${PORT}`));
+
+module.exports = server;
