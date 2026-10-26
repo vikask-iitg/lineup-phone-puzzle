@@ -1,0 +1,8 @@
+{
+  "name": "lineup-phone-puzzle",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A cooperative phone puzzle about lining up matching paths",
+  "scripts": { "start": "node server.js" },
+  "dependencies": { "ws": "^8.18.0" }
+}
