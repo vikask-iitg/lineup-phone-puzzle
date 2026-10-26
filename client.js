@@ -15,7 +15,7 @@ function logo() { return `<div class="topbar"><span class="brand">◉ &nbsp; LIN
 function landing() {
   app.innerHTML = `<div class="shell">${logo()}<section class="hero"><div><div class="eyebrow">One row. One team.</div><h1>Lines<br>in sync.</h1><p>Put your phones side by side. Match the lines at the edges. Swipe across together to solve.</p><div class="actions"><button class="btn primary" id="create">Create room</button><button class="btn" id="join">Join room</button><button class="btn" id="practice">Practice solo</button></div></div><div class="art" aria-label="Three phones joining into one line"><div class="phone"><i></i></div><div class="phone"><i></i></div><div class="phone"><i></i></div></div></section><div class="hint">A little teamwork goes a long way.</div></div>`;
   document.querySelector('#create').onclick = () => connect({ type: 'create', sessionId, name: askName() });
-  document.querySelector('#join').onclick = joinForm;
+  document.querySelector('#join').onclick = () => joinForm();
   document.querySelector('#practice').onclick = practice;
 }
 function askName() { try { return localStorage.getItem('mosaic-name') || ''; } catch { return ''; } }
