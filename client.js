@@ -1,4 +1,5 @@
 const app = document.querySelector('#app');
+const PUBLIC_GAME_ORIGIN = 'https://lineup-phone-puzzle.vercel.app';
 const palette = ['#ff5d73','#39d5c5','#ffc857','#8c7bff','#55a7ff','#ff914d','#d66bdb','#a3d977'];
 const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
 let socket, roomState, sessionId, myId, clockOffset = 0, reconnectCode = '', soloTiles = [], pointer = null, incompleteCount = 0;
@@ -72,9 +73,9 @@ function renderLobby(s) {
   const qrMarkup = document.querySelector('#qr-view')?.outerHTML || '';
   const qrLabel = qrMarkup ? 'Refresh QR' : 'Show QR';
   app.innerHTML = `<div class="shell">${logo()}<div class="lobby"><section class="card"><div class="eyebrow">Your room</div><div class="room-code">${esc(s.code)}</div><div class="actions"><button class="btn" id="copy">Copy invite link</button><button class="btn" id="qr">${qrLabel}</button></div><p class="hint">Share this code. Friends can join from any phone or laptop.</p>${qrMarkup}</section><section class="card"><div class="eyebrow">Players · ${s.players.length}/8</div><div>${s.players.map(p=>`<div class="player"><span class="dot" style="background:${p.color}"></span><strong>${esc(p.name)}</strong>${p.id===s.hostId?'<small>HOST</small>':''}<small>${p.connected?'●':'○'}</small></div>`).join('')}</div><p class="instruction">Put your phones side by side.<br>Match the lines. Swipe together.</p>${host?`<button class="btn primary" id="start" ${s.players.length<2?'disabled':''}>Start game &nbsp; →</button>`:'<p class="hint">Waiting for host…</p>'}</section></div></div>`;
-  document.querySelector('#copy').onclick = async () => { const url = `${location.origin}/${s.code}`; try { await navigator.clipboard.writeText(url); toast('Invite link copied!'); } catch { toast(url); } };
+  document.querySelector('#copy').onclick = async () => { const url = new URL(`/${encodeURIComponent(s.code)}`, PUBLIC_GAME_ORIGIN).href; try { await navigator.clipboard.writeText(url); toast('Invite link copied!'); } catch { toast(url); } };
   document.querySelector('#qr').onclick = () => {
-    const inviteUrl = new URL(`/${encodeURIComponent(s.code)}`, location.origin).href;
+    const inviteUrl = new URL(`/${encodeURIComponent(s.code)}`, PUBLIC_GAME_ORIGIN).href;
     const qrCode = qrcode(0, 'M');
     qrCode.addData(inviteUrl, 'Byte');
     qrCode.make();
