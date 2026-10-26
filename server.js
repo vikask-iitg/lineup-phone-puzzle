@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 3000;
 const staticFiles = new Map([
   ['/index.html', fs.readFileSync(path.join(ROOT, 'index.html'))],
   ['/favicon.svg', fs.readFileSync(path.join(ROOT, 'favicon.svg'))],
+  ['/og-image.jpg', fs.readFileSync(path.join(ROOT, 'og-image.jpg'))],
   ['/style.css', fs.readFileSync(path.join(ROOT, 'style.css'))],
   ['/client.js', fs.readFileSync(path.join(ROOT, 'client.js'))],
   ['/qrcode-generator.js', fs.readFileSync(path.join(ROOT, 'qrcode-generator.js'))],
@@ -23,7 +24,7 @@ const server = http.createServer((req, res) => {
   const data = staticFiles.get(pathname);
   if (!data) { res.writeHead(404).end('Not found'); return; }
   const ext = path.extname(pathname);
-  res.writeHead(200, { 'Content-Type': ({ '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml' })[ext] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
+  res.writeHead(200, { 'Content-Type': ({ '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg' })[ext] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
   res.end(data);
 });
 const wss = new WebSocketServer({ server });
