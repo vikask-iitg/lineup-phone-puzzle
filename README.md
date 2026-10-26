@@ -55,6 +55,7 @@ The server keeps room state in memory. Rooms disappear when the process restarts
 | `server.js` | Static HTTP server, WebSocket rooms, game state, timers, and swipe evaluation |
 | `server.ts` | Vercel Node.js server entry point |
 | `index.html` | App shell and mobile viewport settings |
+| `favicon.svg` | Browser tab icon with the game's connecting lime and coral lines |
 | `client.js` | Landing, lobby, play screens, room connection, and solo practice |
 | `qrcode-generator.js` | Local QR encoder for shareable room links |
 | `style.css` | Responsive visual design and touch-friendly layout |
